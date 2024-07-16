@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import homeIcon from './../assets/home.svg'
 
-export default function Header() {
+export default function Header(onSave) {
   return (
     <>
       <div className='flex items-center w-full my-5 border-b-4 pb-2 border-indigo-500' >

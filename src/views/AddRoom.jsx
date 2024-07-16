@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import { useContext, useState } from 'react'
 import SelectRoom from '../components/SelectRoom'
 import { roomsContext } from '../context/roomsContext'
 import { useNavigate, Link } from 'react-router-dom';
@@ -8,7 +8,7 @@ export default function AddRoom() {
   const [room, setRoom] = useState({})
   const { rooms, setRooms } = useContext(roomsContext)
   const navigate = useNavigate()
-
+  
   function addProp(key, value) {
     setRoom({ ...room, [key]: value })
   }
@@ -25,6 +25,7 @@ export default function AddRoom() {
       return
     }
     setRooms({ ...rooms, ['room' + room.name]: room })
+    setRoom({})
     navigate("/")
   }
 

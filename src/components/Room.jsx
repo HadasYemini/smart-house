@@ -4,7 +4,7 @@ export default function Room({ room }) {
     const navigate = useNavigate()
 
     function gotoRoom() {
-        navigate(`/room${room.name}`)
+        navigate(`room${room.name}`)
     }
 
     return (

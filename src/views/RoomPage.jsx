@@ -1,14 +1,18 @@
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useContext, useState } from 'react';
 import { roomsContext } from '../context/roomsContext';
 import Device from '../components/Device';
 import AddDevice from '../components/AddDevice';
 import Header from '../components/Header';
+import { roomService } from '../services/roomService';
 
 export default function RoomPage() {
   const { inputValue } = useParams();
   const { rooms, setRooms } = useContext(roomsContext)
   const [visible, setVisible] = useState(false);
+  const [saving, setSaving] = useState(false)
+  const [saveError, setSaveError] = useState(null)
+  const navigate = useNavigate()
 
   function updateRoom(device) {
     let room = { ...rooms[inputValue] }
@@ -38,6 +42,19 @@ export default function RoomPage() {
     setRooms({ ...rooms, [inputValue]: room })
   }
 
+  async function saveRoomsAndNavigate() {
+    setSaving(true)
+    setSaveError(null)
+    try {
+      await roomService.saveRooms(rooms)
+      navigate("/")
+    } catch (error) {
+      setSaveError(error.message)
+    } finally {
+      setSaving(false)
+    }
+  }
+
   return (
     <div>
       <div className='bg-slate-50 border-solid border-4 border-indigo-600 flex-col flex font-bold p-10'
@@ -63,6 +80,16 @@ export default function RoomPage() {
       {visible ?
         <AddDevice updateRoom={updateRoom} />
         : <></>}
+
+      <button
+        onClick={saveRoomsAndNavigate}
+        disabled={saving}
+        className='text-lg p-2 text-center border-indigo-200 bg-indigo-200 border-solid border-4 mt-5'
+      >
+        {saving ? 'Saving...' : 'Save and Return Home'}
+      </button>
+      {saveError && <p className="text-red-500 mt-2">{saveError}</p>}
+
     </div>
   )
 }
